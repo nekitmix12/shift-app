@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">shift-app</string>
+    <string name="address">Адрес</string>
+    <string name="phone">Телефон</string>
+    <string name="street">ул. %1$s</string>
+    <string name="list">Список</string>
 </resources>
