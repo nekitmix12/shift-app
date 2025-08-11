@@ -2,6 +2,27 @@
     <string name="app_name">shift-app</string>
     <string name="address">Адрес</string>
     <string name="phone">Телефон</string>
+    <string name="mobile">Мобильник</string>
+    <string name="email">Почта</string>
+    <string name="user_profile">Профиль</string>
     <string name="street">ул. %1$s</string>
     <string name="list">Список</string>
+    <string name="active_user">Активный пользователь</string>
+    <string name="basic_info">Базовая информация</string>
+    <string name="full_name">Полное имя</string>
+    <string name="birthday">День рождения</string>
+    <string name="id">ID</string>
+    <string name="registration">Регистрация</string>
+    <string name="nationality">Национальность</string>
+    <string name="location_info">Местоположение</string>
+    <string name="contact_info">Контактная информация</string>
+    <string name="street_">Улица</string>
+    <string name="city">Город</string>
+    <string name="state">Округ</string>
+    <string name="country">Страна</string>
+    <string name="postal_code">Почтовый код</string>
+    <string name="time_zone">Местное время</string>
+    <string name="coordinates">Координаты</string>
+    <string name="photos">Фотографии</string>
+    <string name="lat_and_long">шир. %s, дол. %s</string>
 </resources>

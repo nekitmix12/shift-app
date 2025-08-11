@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -41,7 +43,19 @@ android {
 }
 
 dependencies {
+    api(libs.androidx.navigation.compose)
+    api(libs.kotlinx.collections.immutable)
 
+    implementation( libs.androidx.lifecycle.viewmodel.compose)
+    kapt(libs.dagger.compiler)
+    implementation(libs.dagger)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+    api(libs.coil.compose)
+    api(libs.retrofit2.kotlinx.serialization.converter)
+    api(libs.okhttp)
+    api(libs.retrofit)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -57,4 +71,6 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation (libs.accompanist.insets)
+
 }

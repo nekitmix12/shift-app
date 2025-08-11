@@ -1,6 +1,7 @@
 package nekit.corporation.shift_app.models
 
 import kotlinx.serialization.Serializable
+import nekit.corporation.shift_app.data.local_data_source.dbo.UserDbo
 
 @Serializable
 data class User(
@@ -17,3 +18,36 @@ data class User(
     val picture: Picture,
     val nat: String
 )
+
+fun User.toUserDbo() =
+    UserDbo(
+        uid = 0,
+        gender,
+        name.toNameDbo(),
+        location.toLocationDbo(),
+        email,
+        login.toLoginDbo(),
+        dob.toDataInfoDbo(),
+        registered.toDataInfoDbo(),
+        phone,
+        cell,
+        id.toIdDbo(),
+        picture.toPictureDbo(),
+        nat
+    )
+
+fun UserDbo.toUser() =
+    User(
+        gender,
+        name.toName(),
+        location.toLocation(),
+        email,
+        login.toLogin(),
+        dob.toDataInfo(),
+        registered.toDataInfo(),
+        phone,
+        cell,
+        id.toId(),
+        picture.toPicture(),
+        nat
+    )

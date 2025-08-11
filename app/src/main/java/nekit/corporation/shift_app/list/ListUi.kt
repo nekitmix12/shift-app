@@ -1,7 +1,8 @@
-package nekit.corporation.shift_app
+package nekit.corporation.shift_app.list
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
@@ -17,8 +18,11 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
@@ -27,79 +31,23 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import nekit.corporation.shift_app.models.Coordinates
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
+import nekit.corporation.shift_app.R
 import nekit.corporation.shift_app.models.ListModel
-import nekit.corporation.shift_app.models.Location
-import nekit.corporation.shift_app.models.Name
-import nekit.corporation.shift_app.models.Street
-import nekit.corporation.shift_app.models.Timezone
+import nekit.corporation.shift_app.models.User
 import nekit.corporation.shift_app.ui.theme.Blue
 import nekit.corporation.shift_app.ui.theme.BlueLight
 import nekit.corporation.shift_app.ui.theme.Grey
+import java.util.UUID
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ListUi() {
-    val items = listOf(
-        ListModel(
-            Name("Ivanov", "Ivan", "Ivanovich"),
-            "",
-            Location(
-                street = Street(12, "Ленина"),
-                city = "",
-                state = "",
-                country = "",
-                postcode = "",
-                coordinates = Coordinates("1", "1"),
-                timezone = Timezone("", "")
-            ),
-            phoneNumber = "+7 (912) 345-67-89"
-        ),
-        ListModel(
-            Name("Ivanov", "Ivan", "Ivanovich"),
-            "",
-            Location(
-                street = Street(12, "Ленина"),
-                city = "",
-                state = "",
-                country = "",
-                postcode = "",
-                coordinates = Coordinates("1", "1"),
-                timezone = Timezone("", "")
-            ),
-            phoneNumber = "+7 (912) 345-67-89"
-        ),
-        ListModel(
-            Name("Ivanov", "Ivan", "Ivanovich"),
-            "",
-            Location(
-                street = Street(12, "Ленина"),
-                city = "",
-                state = "",
-                country = "",
-                postcode = "",
-                coordinates = Coordinates("1", "1"),
-                timezone = Timezone("", "")
-            ),
-            phoneNumber = "+7 (912) 345-67-89"
-        ),
-        ListModel(
-            Name("Ivanov", "Ivan", "Ivanovich"),
-            "",
-            Location(
-                street = Street(12, "Ленина"),
-                city = "",
-                state = "",
-                country = "",
-                postcode = "",
-                coordinates = Coordinates("1", "1"),
-                timezone = Timezone("", "")
-            ),
-            phoneNumber = "+7 (912) 345-67-89"
-        ),
-    )
+fun ListUi(viewModelFactory: ViewModelProvider.Factory, onClick: (User) -> Unit) {
+    val viewModel: ListViewModel = viewModel(factory = viewModelFactory)
+    val items = viewModel.users.collectAsState()
     Column {
         Text(
             stringResource(R.string.list),
@@ -112,15 +60,22 @@ fun ListUi() {
 
             )
         Spacer(Modifier.height(24.dp))
-        LazyColumn(
-            modifier = Modifier
-                .padding(horizontal = 16.dp)
-                .fillMaxSize()
+        PullToRefreshBox(
+            isRefreshing = viewModel.showScroll.collectAsState().value,
+            onRefresh = viewModel::update,
         ) {
+            LazyColumn(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .fillMaxSize()
+            ) {
 
-            items(items) {
-                ListItem(it)
-                Spacer(Modifier.height(12.dp))
+                items(items.value) {
+                    ListItem(it) { uuid ->
+                        viewModel.getUserByUUId(uuid)?.let { user -> onClick(user) }
+                    }
+                    Spacer(Modifier.height(12.dp))
+                }
             }
         }
         Spacer(Modifier.height(24.dp))
@@ -129,10 +84,11 @@ fun ListUi() {
 }
 
 @Composable
-fun ListItem(listModel: ListModel) {
+fun ListItem(listModel: ListModel, onClick: (UUID) -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
+            .clickable { onClick(listModel.uuid) }
             .height(IntrinsicSize.Min)
             .shadow(4.dp, spotColor = Blue, shape = RoundedCornerShape(8.dp)),
         colors = CardDefaults.cardColors().copy(containerColor = Color.White)
